@@ -56,13 +56,13 @@ jobs:
       - name: Setup Kuber config
         run: |
           kubectl config set-cluster rsoi-lab4 --server="${{secrets.K8S_HOST}}" --insecure-skip-tls-verify=true
-          kubectl config set-credentials editor --token="${{secrets.K8S_TOKEN}}"
-          kubectl config set-context default --cluster=rsoi-lab4 --user=editor
+          kubectl config set-credentials github-actions --token="${{secrets.K8S_TOKEN}}"
+          kubectl config set-context default --cluster=rsoi-lab4 --user=github-actions
           kubectl config use-context default
 
       - name: Helm deploy
         run: |
-          cd k8s && helm upgrade --install --username=editor --debug services ./services-chart
+          cd k8s && helm upgrade --install --debug services ./services-chart
           sleep 20
 
       - name: Run API Tests

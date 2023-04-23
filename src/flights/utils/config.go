@@ -35,6 +35,6 @@ func InitConfig() {
 		},
 		"logs/server.log",
 		8060,
-		`{"keys":[{"kty":"RSA","alg":"RS256","kid":"MeFQFgrQ4H20rObty3HDo2U-mAAD0dPydKrXOJ9zGAc","use":"sig","e":"AQAB","n":"quqU1buEQMDreTIXabUD491R05xrBpTkn5mf9JUtRWjtFp1qj5mQ7fpagYrs0nxbnJtHESbdTnoF1bsUT4qmXnldOC7VrZZr4mW3fhlNjF176yF4mFSjqCcRaj3uELBc2vbpEn-xasS0oyjr-pQ9n5MGQWkHCUzDm1yigunTYqIALnRFLBLTesXWzKyFHggvTeIjgVt-kPDPjn8bzwQrZC4MC0s-gmgHXZnY7wQMCJ33satSzrbe_XikoJsyKEUfeU3SKjd_MVhuvvvWSv9BUJWsgUzxySnBSGxIlydYPqVdLB6YN4sEItRBbLC0_0m3uYyAQpew7IaHda7yQoIW9Q"}]}`,
+		`{"keys":[{"kty":"RSA","alg":"RS256","kid":"XVh9VRM57Bic_gSk2s4owqSKYVQYhZrd7ONvInnszyQ","use":"sig","e":"AQAB","n":"r25i2X_caK8RpM5r4Gugi0N01TGL-rR_3f7vNgkXpL0RlvgJSTWjt8o_NqreLE2b9YLktYI8o7e1Asmz-U2wGA0cepppU5g-7J7B83KyWc8a71Wzj5fSBHr3_SQx2L_sPSQ2lp27fdVjIeL-c2htV69889MGz3ut3snJiGbMNdxfyEbcL8OzjUp1BYkM69A-NBc8xwCwZNWkll5sIHxIb7D5S4m_SnyZ3VTdTTvbhz-8ao3j8ofjWfuC5ys4sTLVXVrWUPKv6yrLBqcLeMezHDaUF-Ocx62dpJTC3-ZhtctmFWhHJdsK0U0VAkHaDX6qGsnpigL0ukskt04rhkr0lQ"}]}`,
 	}
 }

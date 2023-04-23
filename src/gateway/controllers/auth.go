@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"gateway/controllers/responses"
 	"gateway/utils"
 	"strings"
@@ -34,6 +35,7 @@ func RetrieveToken(w http.ResponseWriter, r *http.Request) *Token {
 	}
 	splitToken := strings.Split(reqToken, "Bearer ")
 	tokenStr := splitToken[1]
+	fmt.Printf("token: %s", tokenStr)
 	jwks := newJWKs(utils.Config.RawJWKS)
 	tk := &Token{}
 
