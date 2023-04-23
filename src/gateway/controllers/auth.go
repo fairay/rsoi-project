@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"gateway/controllers/responses"
 	"gateway/utils"
 	"strings"
