@@ -62,7 +62,7 @@ jobs:
 
       - name: Helm deploy
         run: |
-          cd k8s && helm upgrade --install --debug services ./services-chart
+          cd k8s && helm upgrade --install --username=github-actions --debug services ./services-chart
           sleep 20
 
       - name: Run API Tests
