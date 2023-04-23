@@ -1,7 +1,7 @@
 version: "3"
 services:
-  postgres:
-    image: library/postgres:15
+  postgres-service:
+    image: library/postgres:13
     container_name: postgres
     restart: on-failure
     environment:
@@ -40,7 +40,48 @@ services:
     depends_on:
       - zookeeper
 
-# TODO добавить сервисы
+  privileges-service:
+    build:
+      context: src/privileges
+    ports:
+      - "8050:8050"
+    depends_on:
+      - postgres-service
+    links: 
+      - postgres-service
+    restart: on-failure
+
+  flights-service:
+    build:
+      context: src/flights
+    ports:
+      - "8060:8060"
+    depends_on:
+      - postgres-service
+    links: 
+      - postgres-service
+    restart: on-failure
+  
+  tickets-service:
+    build:
+      context: src/tickets
+    ports:
+      - "8070:8070"
+    depends_on:
+      - postgres-service
+    links: 
+      - postgres-service
+    restart: on-failure
+
+  gateway-service:
+    build:
+      context: src/gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - flights-service
+      - privileges-service
+      - tickets-service
 
 volumes:
   db-data:
