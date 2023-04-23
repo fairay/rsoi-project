@@ -17,13 +17,23 @@ jobs:
 
       - uses: docker/setup-buildx-action@v2
 
+      - name: Create flags
+        id: flags
+        run: |
+          RELEASE="false"
+          echo "::set-output name=RELEASE::$RELEASE"
+
       - name: Build gateway
+        if: ${{ steps.flags.outputs.RELEASE == 'true' }}
         run: cd src/gateway && go get -d ./... && go build ./...
       - name: Build flights
+        if: ${{ steps.flags.outputs.RELEASE == 'true' }}
         run: cd src/flights && go get -d ./... && go build ./...
       - name: Build tickets
+        if: ${{ steps.flags.outputs.RELEASE == 'true' }}
         run: cd src/tickets && go get -d ./... && go build ./...
       - name: Build privileges
+        if: ${{ steps.flags.outputs.RELEASE == 'true' }}
         run: cd src/privileges && go get -d ./... && go build ./...
 
       - name: Docker hub auth
