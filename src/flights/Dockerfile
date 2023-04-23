@@ -4,8 +4,10 @@ FROM golang:1.17
 
 WORKDIR /app
 
-COPY . .
+COPY go.mod go.sum ./
 RUN go mod download
+
+COPY . .
 
 RUN mkdir -p logs
 RUN mkdir -p temp
