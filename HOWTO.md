@@ -15,6 +15,7 @@ yc managed-kubernetes create-token
 ```
 Имеет свойство протухать
 
+**OKTA_CLIENT_SECRET** [гайд](https://devforum.okta.com/t/where-is-client-id-and-client-secret/9385/3)
 
 # Прочее
 

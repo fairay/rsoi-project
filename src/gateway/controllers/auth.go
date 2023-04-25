@@ -2,8 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"gateway/controllers/responses"
+	"gateway/objects"
 	"gateway/utils"
+	"io/ioutil"
 	"strings"
 
 	"net/http"
@@ -11,6 +14,7 @@ import (
 
 	"github.com/MicahParks/keyfunc"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/gorilla/mux"
 )
 
 type Token struct {
@@ -57,4 +61,31 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 		}
 	})
+}
+
+type authCtrl struct {
+	client *http.Client
+}
+
+func InitAuth(r *mux.Router, client *http.Client) {
+	ctrl := &authCtrl{client}
+	r.HandleFunc("/authorize", ctrl.authorize).Methods("POST")
+}
+
+func (ctrl *authCtrl) authorize(w http.ResponseWriter, r *http.Request) {
+	req, _ := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/authorize", utils.Config.IdentityProviderEndpoint), r.Body)
+
+	resp, err := ctrl.client.Do(req)
+	if err != nil {
+		responses.InternalError(w)
+		return
+	}
+	if resp.StatusCode == http.StatusOK {
+		data := &objects.AuthResponse{}
+		body, _ := ioutil.ReadAll(resp.Body)
+		json.Unmarshal(body, data)
+		responses.JsonSuccess(w, data)
+	} else {
+		responses.BadRequest(w, "auth failed")
+	}
 }

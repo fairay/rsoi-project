@@ -35,6 +35,9 @@ jobs:
       - name: Build privileges
         if: ${{ steps.flags.outputs.RELEASE == 'true' }}
         run: cd src/privileges && go get -d ./... && go build ./...
+      - name: Build identity provider
+        if: ${{ steps.flags.outputs.RELEASE == 'true' }}
+        run: cd src/identity-provider && go get -d ./... && go build ./...
 
       - name: Docker hub auth
         uses: docker/login-action@v2
@@ -62,6 +65,11 @@ jobs:
           cd ./src/privileges
           docker build --no-cache -t fairay/rsoi-lab5-privileges .
           docker push fairay/rsoi-lab5-privileges:latest
+      - name: Publish identity-provider image
+        run: |
+          cd ./src/identity-provider
+          docker build --no-cache -t fairay/rsoi-lab5-identity-provider --build-arg OKTA_CLIENT_SECRET="${{secrets.OKTA_CLIENT_SECRET}}" .
+          docker push fairay/rsoi-lab5-identity-provider:latest
 
       - name: Setup Kuber config
         run: |

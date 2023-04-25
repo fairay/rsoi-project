@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"fmt"
-	"gateway/models"
-	"gateway/utils"
+	"identity-provider/models"
+	"identity-provider/utils"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -14,13 +14,7 @@ func initControllers(r *mux.Router, models *models.Models) {
 	r.Use(utils.LogHandler)
 	api1_r := r.PathPrefix("/api/v1/").Subrouter()
 
-	InitAuth(api1_r, models.Client)
-	api1_r_auth := api1_r.NewRoute().Subrouter();
-	api1_r_auth.Use(JwtAuthentication)
-
-	InitFlights(api1_r_auth, models.Flights)
-	InitPrivileges(api1_r_auth, models.Privileges)
-	InitTickets(api1_r_auth, models.Tickets)
+	InitAuth(api1_r, models.Auth)
 }
 
 func InitRouter() *mux.Router {

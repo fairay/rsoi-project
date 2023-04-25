@@ -5,6 +5,9 @@ type: application
 dependencies:
   - name: service-chart
     version: 1.0.0
+    alias: identity-provider
+  - name: service-chart
+    version: 1.0.0
     alias: privileges
   - name: service-chart
     version: 1.0.0
