@@ -68,7 +68,10 @@ jobs:
       - name: Publish identity-provider image
         run: |
           cd ./src/identity-provider
-          docker build --no-cache -t fairay/rsoi-lab5-identity-provider --build-arg OKTA_CLIENT_SECRET="${{secrets.OKTA_CLIENT_SECRET}}" .
+          docker build --no-cache -t fairay/rsoi-lab5-identity-provider \
+            --build-arg OKTA_CLIENT_SECRET="${{secrets.OKTA_CLIENT_SECRET}}" \
+            --build-arg OKTA_SSWS_TOKEN="${{secrets.OKTA_SSWS_TOKEN}}" \
+            .
           docker push fairay/rsoi-lab5-identity-provider:latest
 
       - name: Setup Kuber config
