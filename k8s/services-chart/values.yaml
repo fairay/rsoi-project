@@ -4,8 +4,6 @@ identity-provider:
     image:
       name: fairay/rsoi-lab5-identity-provider
       version: latest
-    database:
-      name: identity-provider
 privileges:
   service:
     port: 8050

@@ -77,6 +77,7 @@ func (ctrl *authCtrl) authorize(w http.ResponseWriter, r *http.Request) {
 
 	resp, err := ctrl.client.Do(req)
 	if err != nil {
+		fmt.Println(err.Error())
 		responses.InternalError(w)
 		return
 	}

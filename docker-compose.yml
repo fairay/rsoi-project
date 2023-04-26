@@ -40,7 +40,7 @@ services:
     depends_on:
       - zookeeper
 
-  identity-provider:
+  identity-provider-service:
     build:
       context: src/identity-provider
       args:

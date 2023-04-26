@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"identity-provider/models"
 	"identity-provider/objects"
 
@@ -20,15 +21,18 @@ func InitAuth(r *mux.Router, auth *models.AuthM) {
 }
 
 func (ctrl *auhtCtrl) authorize(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Request for authorize")
 	req_body := new(objects.AuthRequest)
 	err := json.NewDecoder(r.Body).Decode(req_body)
 	if err != nil {
+		fmt.Println(err.Error())
 		ValidationErrorResponse(w, err.Error())
 		return
 	}
 
 	data, err := ctrl.auth.Auth(req_body.Username, req_body.Password)
 	if err != nil {
+		fmt.Println(err.Error())
 		BadRequest(w, "auth failed")
 	} else {
 		JsonSuccess(w, data)
