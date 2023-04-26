@@ -3,6 +3,7 @@ package responses
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -91,4 +92,13 @@ func TokenExpired(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusUnauthorized)
 	json.NewEncoder(w).Encode(msg)
+}
+
+func ForwardResponse(w http.ResponseWriter, resp *http.Response) {
+	w.WriteHeader(resp.StatusCode)
+	body := []byte{}
+	if resp.ContentLength != 0 {
+		body, _ = ioutil.ReadAll(resp.Body)
+	}
+	json.NewEncoder(w).Encode(body)
 }

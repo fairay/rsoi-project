@@ -77,7 +77,7 @@ func (ctrl *ticketsCtrl) get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctrl *ticketsCtrl) delete(w http.ResponseWriter, r *http.Request) {
-	
+
 	urlParams := mux.Vars(r)
 	ticket_uid := urlParams["ticketUid"]
 	authHeader := r.Header.Get("Authorization")

@@ -1,13 +1,13 @@
 package utils
 
 type Configuration struct {
-	LogFile            string `json:"log_file"`
-	Port               uint16 `json:"port"`
-	RawJWKS            string `json:"raw-jwks"`
-	IdentityProviderEndpoint    string `json:"identity-provider-endpoint"`
-	FlightsEndpoint    string `json:"flights-endpoint"`
-	TicketsEndpoint    string `json:"tickets-endpoint"`
-	PrivilegesEndpoint string `json:"privileges-endpoint"`
+	LogFile                  string `json:"log_file"`
+	Port                     uint16 `json:"port"`
+	RawJWKS                  string `json:"raw-jwks"`
+	IdentityProviderEndpoint string `json:"identity-provider-endpoint"`
+	FlightsEndpoint          string `json:"flights-endpoint"`
+	TicketsEndpoint          string `json:"tickets-endpoint"`
+	PrivilegesEndpoint       string `json:"privileges-endpoint"`
 }
 
 var (

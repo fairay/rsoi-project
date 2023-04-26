@@ -69,7 +69,27 @@ type authCtrl struct {
 
 func InitAuth(r *mux.Router, client *http.Client) {
 	ctrl := &authCtrl{client}
+	r.HandleFunc("/register", ctrl.register).Methods("POST")
 	r.HandleFunc("/authorize", ctrl.authorize).Methods("POST")
+}
+
+func (ctrl *authCtrl) register(w http.ResponseWriter, r *http.Request) {
+	req, _ := http.NewRequest(
+		"POST",
+		fmt.Sprintf("%s/api/v1/register", utils.Config.IdentityProviderEndpoint),
+		r.Body,
+	)
+	req.Header.Add("Authorization", r.Header.Get("Authorization"))
+
+	resp, err := ctrl.client.Do(req)
+	if err != nil {
+		fmt.Println(err.Error())
+		responses.InternalError(w)
+		return
+	}
+
+	defer resp.Body.Close()
+	responses.ForwardResponse(w, resp)
 }
 
 func (ctrl *authCtrl) authorize(w http.ResponseWriter, r *http.Request) {

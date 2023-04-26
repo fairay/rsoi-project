@@ -15,7 +15,10 @@ run: build
 	.\temp\identity-provider.exe
 
 docker-push:
-	docker build --no-cache -t fairay/rsoi-lab5-identity-provider:latest --build-arg OKTA_CLIENT_SECRET="$(OKTA_CLIENT_SECRET)" .
+	docker build --no-cache -t fairay/rsoi-lab5-identity-provider:latest \
+		--build-arg OKTA_CLIENT_SECRET="$(OKTA_CLIENT_SECRET)" \
+		--build-arg OKTA_SSWS_TOKEN="$(OKTA_SSWS_TOKEN)" \
+		.
 	docker push fairay/rsoi-lab5-identity-provider:latest
 
 # Creating directories

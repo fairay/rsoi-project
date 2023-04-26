@@ -45,6 +45,7 @@ services:
       context: src/identity-provider
       args:
         OKTA_CLIENT_SECRET: ${OKTA_CLIENT_SECRET}
+        OKTA_SSWS_TOKEN: ${OKTA_SSWS_TOKEN}
     ports:
       - "8040:8040"
     restart: on-failure
@@ -88,7 +89,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - identity-provider
+      - identity-provider-service
       - flights-service
       - privileges-service
       - tickets-service

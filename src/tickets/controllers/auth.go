@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
+	"strings"
 	"tickets/controllers/responses"
 	"tickets/utils"
-	"strings"
 
 	"net/http"
 	"time"

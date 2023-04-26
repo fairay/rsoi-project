@@ -3,7 +3,7 @@ package models
 import "net/http"
 
 type Models struct {
-	Client		*http.Client
+	Client     *http.Client
 	Flights    *FlightsM
 	Privileges *PrivilegesM
 	Tickets    *TicketsM

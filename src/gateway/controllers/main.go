@@ -15,7 +15,7 @@ func initControllers(r *mux.Router, models *models.Models) {
 	api1_r := r.PathPrefix("/api/v1/").Subrouter()
 
 	InitAuth(api1_r, models.Client)
-	api1_r_auth := api1_r.NewRoute().Subrouter();
+	api1_r_auth := api1_r.NewRoute().Subrouter()
 	api1_r_auth.Use(JwtAuthentication)
 
 	InitFlights(api1_r_auth, models.Flights)

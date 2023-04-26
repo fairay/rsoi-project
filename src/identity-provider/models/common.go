@@ -1,6 +1,7 @@
 package models
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"identity-provider/objects"
@@ -32,19 +33,45 @@ func InitModels() *Models {
 	return models
 }
 
+func (model *AuthM) Create(request *objects.UserCreateRequest) error {
+	request.GroupIds = []string{utils.Config.Okta.ClientGroup}
+	request.Profile.UserType = utils.User.String()
+
+	req_body, err := json.Marshal(request)
+	if err != nil {
+		return err
+	}
+	req, _ := http.NewRequest(
+		"POST",
+		fmt.Sprintf("%s/api/v1/users/?activate=true", utils.Config.Okta.Endpoint),
+		bytes.NewBuffer(req_body),
+	)
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", fmt.Sprintf("SSWS %s", utils.Config.Okta.SSWSToken))
+
+	resp, err := model.client.Do(req)
+	if err != nil {
+		return err
+	} else if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("auth failed with code %d", resp.StatusCode)
+	} else {
+		return nil
+	}
+}
+
 func (model *AuthM) Auth(username string, password string) (*objects.AuthResponse, error) {
 	authRequest := url.Values{}
 	authRequest.Set("scope", "openid")
 	authRequest.Set("grant_type", "password")
 	authRequest.Set("username", username)
 	authRequest.Set("password", password)
-	authRequest.Set("client_id", utils.Config.OktaClientId)
-	authRequest.Set("client_secret", utils.Config.OktaClientSecret)
+	authRequest.Set("client_id", utils.Config.Okta.ClientId)
+	authRequest.Set("client_secret", utils.Config.Okta.ClientSecret)
 	encodedData := authRequest.Encode()
 
 	req, _ := http.NewRequest(
 		"POST",
-		fmt.Sprintf("%s/oauth2/default/v1/token", utils.Config.OktaEndpoint),
+		fmt.Sprintf("%s/oauth2/default/v1/token", utils.Config.Okta.Endpoint),
 		strings.NewReader(encodedData),
 	)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")

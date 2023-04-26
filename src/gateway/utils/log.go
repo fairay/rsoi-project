@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/urfave/negroni"
 )
 
 var (
@@ -36,6 +38,11 @@ var LogHandler = func(next http.Handler) http.Handler {
 		Logger.Printf("%s REQUEST\t URL:%s \tAddress: %s", r.Method, r.URL, r.RemoteAddr)
 		fmt.Printf("%s REQUEST\t URL:%s \tAddress: %s\n", r.Method, r.URL, r.RemoteAddr)
 
-		next.ServeHTTP(w, r)
+		lrw := negroni.NewResponseWriter(w)
+		next.ServeHTTP(lrw, r)
+
+		statusCode := lrw.Status()
+		Logger.Printf("<-- %d %s", statusCode, http.StatusText(statusCode))
+		fmt.Printf("<-- %d %s\n", statusCode, http.StatusText(statusCode))
 	})
 }
