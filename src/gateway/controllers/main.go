@@ -12,6 +12,9 @@ import (
 
 func initControllers(r *mux.Router, models *models.Models) {
 	r.Use(utils.LogHandler)
+	r.Use(func (next http.Handler) http.Handler {
+		return utils.RequestStatMiddleware(next, "none", models.Kafka.KafkaTopic, models.Kafka.Producer);
+	})
 	api1_r := r.PathPrefix("/api/v1/").Subrouter()
 
 	InitAuth(api1_r, models.Client)
