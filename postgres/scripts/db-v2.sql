@@ -6,6 +6,3 @@ GRANT ALL PRIVILEGES ON DATABASE reservations TO program;
 
 CREATE DATABASE loyalties;
 GRANT ALL PRIVILEGES ON DATABASE loyalties TO program;
-
-CREATE DATABASE staistics;
-GRANT ALL PRIVILEGES ON DATABASE loyalties TO program;

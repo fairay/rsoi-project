@@ -69,6 +69,9 @@ services:
       - "8030:8030"
     depends_on:
       - kafka
+      - postgres-service
+    links: 
+      - postgres-service
     restart: on-failure
 
   identity-provider-service:

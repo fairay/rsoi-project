@@ -6,9 +6,10 @@ type KafkaConfig struct {
 }
 
 type Configuration struct {
-	LogFile string      `json:"log_file"`
-	Port    uint16      `json:"port"`
-	Kafka   KafkaConfig `json:"kafka"`
+	DB      DBConfiguration `json:"db"`
+	LogFile string          `json:"log_file"`
+	Port    uint16          `json:"port"`
+	Kafka   KafkaConfig     `json:"kafka"`
 }
 
 var (
@@ -18,8 +19,16 @@ var (
 // TODO: returnable error
 func InitConfig() {
 	Config = Configuration{
+		DB: DBConfiguration{
+			"postgres",
+			"staistics",
+			"program",
+			"test",
+			"postgres-service",
+			"5432",
+		},
 		LogFile: "logs/server.log",
 		Port:    8030,
-		Kafka:   KafkaConfig{Endpoints: []string{"kafka:29092"}, Topics: []string{"quickstart2"}},
+		Kafka:   KafkaConfig{Endpoints: []string{"kafka:29092"}, Topics: []string{"statistics"}},
 	}
 }

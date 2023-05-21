@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gateway/utils"
 	"log"
 	"net/http"
 	"os"
@@ -9,8 +10,8 @@ import (
 )
 
 type KafkaSettings struct {
-	KafkaTopic	string
-	Producer	sarama.SyncProducer
+	Topic    string
+	Producer sarama.SyncProducer
 }
 
 type Models struct {
@@ -19,11 +20,11 @@ type Models struct {
 	Privileges *PrivilegesM
 	Tickets    *TicketsM
 
-	Kafka	*KafkaSettings
+	Kafka *KafkaSettings
 }
 
 func InitKafka() *KafkaSettings {
-	kafkaBrokers := []string{"kafka:29092"}
+	kafkaBrokers := utils.Config.Kafka.Endpoints
 	sarama.Logger = log.New(os.Stdout, "[sarama] ", log.LstdFlags)
 	config := sarama.NewConfig()
 	config.Net.TLS.Enable = false
@@ -35,7 +36,7 @@ func InitKafka() *KafkaSettings {
 	}
 
 	return &KafkaSettings{
-		KafkaTopic: "quickstart2",
+		Topic:    utils.Config.Kafka.Topics[0],
 		Producer: producer,
 	}
 }

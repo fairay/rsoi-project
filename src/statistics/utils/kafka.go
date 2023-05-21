@@ -1,49 +1,89 @@
 package utils
 
 import (
-	"fmt"
+	"context"
+	"encoding/json"
 	"log"
-	"net/http"
-	"time"
+	"os"
+	"statistics/objects"
 
 	"github.com/Shopify/sarama"
 )
 
-// Данные статистики запросов
-type RequestStat struct {
-	HandlerName string
-	RequestTime time.Duration
+var messages = make(chan *objects.RequestStat)
+
+func GetMessage() *objects.RequestStat {
+	return <-messages
 }
 
-// Функция для отправки статистики запросов в Kafka
-func sendRequestStatToKafka(stat RequestStat, topic string, producer sarama.SyncProducer) {
-	// Преобразуем RequestStat в массив байтов, чтобы отправить в Kafka
-	statBytes := []byte(fmt.Sprintf("%s:%d", stat.HandlerName, stat.RequestTime.Milliseconds()))
+type TaskHandler struct{}
 
-	// Создаем сообщение Kafka
-	msg := &sarama.ProducerMessage{
-		Topic: topic,
-		Value: sarama.ByteEncoder(statBytes),
+func (*TaskHandler) Setup(session sarama.ConsumerGroupSession) error {
+	return nil
+}
+
+func (*TaskHandler) Cleanup(session sarama.ConsumerGroupSession) error {
+	return nil
+}
+
+func (*TaskHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
+	for {
+		select {
+		case message := <-claim.Messages():
+			log.Printf("Message claimed: value = %s, timestamp = %v, topic = %s", string(message.Value), message.Timestamp, message.Topic)
+			session.MarkMessage(message, "")
+
+			dto := new(objects.RequestStat)
+			json.Unmarshal(message.Value, dto)
+			messages <- dto
+
+		// Should return when `session.Context()` is done.
+		// If not, will raise `ErrRebalanceInProgress` or `read tcp <ip>:<port>: i/o timeout` when kafka rebalance. see:
+		// https://github.com/Shopify/sarama/issues/1192
+		case <-session.Context().Done():
+			return nil
+		}
 	}
+}
 
-	// Отправляем сообщение в Kafka
-	_, _, err := producer.SendMessage(msg)
+type KafkaSettings struct {
+	Consumer sarama.ConsumerGroup
+}
+
+func InitKafka() *KafkaSettings {
+	kafkaBrokers := Config.Kafka.Endpoints
+	sarama.Logger = log.New(os.Stdout, "[sarama] ", log.LstdFlags)
+	config := sarama.NewConfig()
+	config.Net.TLS.Enable = false
+	config.Producer.RequiredAcks = sarama.WaitForAll
+	config.Producer.Return.Successes = true
+	consumer, err := sarama.NewConsumerGroup(kafkaBrokers, "1", config)
 	if err != nil {
-		log.Printf("Error sending request stat to Kafka: %v", err)
-		return
+		log.Fatalf("Error creating Kafka consumer: %v", err)
 	}
 
-	log.Printf("Request stat sent to Kafka: %s", string(statBytes))
+	return &KafkaSettings{
+		Consumer: consumer,
+	}
 }
 
-// Обертка для обработчиков HTTP, чтобы сохранять статистику запросов
-func RequestStatMiddleware(next http.Handler, handlerName string, topic string, producer sarama.SyncProducer) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
-		next.ServeHTTP(w, r)
-		requestTime := time.Since(start)
+func (kafka *KafkaSettings) ConsumeLoop() {
+	ctx := context.Background()
+	handler := &TaskHandler{}
+	for {
+		err := kafka.Consumer.Consume(ctx, Config.Kafka.Topics, handler)
+		if err != nil {
+			log.Println(err.Error())
+			panic(err)
+		}
 
-		stat := RequestStat{HandlerName: handlerName, RequestTime: requestTime}
-		go sendRequestStatToKafka(stat, topic, producer)
-	})
+		if ctx.Err() != nil {
+			log.Println(ctx.Err().Error())
+			panic(err)
+		}
+	}
+}
+
+func (kafka *KafkaSettings) Close() {
+	kafka.Consumer.Close()
 }
