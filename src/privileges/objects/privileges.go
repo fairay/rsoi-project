@@ -34,3 +34,8 @@ func ToPrivilegeInfoResponse(privilege *Privilege, history []PrivilegeHistory) *
 		balance_history,
 	}
 }
+
+type AddPrivilegeRequest struct {
+	User   string `json:"user"`
+	Status string `json:"Status"`
+}

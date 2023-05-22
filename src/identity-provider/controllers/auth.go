@@ -6,6 +6,7 @@ import (
 	"identity-provider/models"
 	"identity-provider/objects"
 	"identity-provider/utils"
+	"log"
 
 	"net/http"
 	"strings"
@@ -67,7 +68,7 @@ func RetrieveToken(w http.ResponseWriter, r *http.Request) (*Token, error) {
 func (ctrl *auhtCtrl) register(w http.ResponseWriter, r *http.Request) {
 	token, err := RetrieveToken(w, r)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return
 	}
 
@@ -79,14 +80,14 @@ func (ctrl *auhtCtrl) register(w http.ResponseWriter, r *http.Request) {
 	req_body := new(objects.UserCreateRequest)
 	err = json.NewDecoder(r.Body).Decode(req_body)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		ValidationErrorResponse(w, err.Error())
 		return
 	}
 
 	err = ctrl.auth.Create(req_body)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		BadRequest(w, "user creation failed")
 	} else {
 		JsonSuccess(w, nil)
@@ -97,14 +98,14 @@ func (ctrl *auhtCtrl) authorize(w http.ResponseWriter, r *http.Request) {
 	req_body := new(objects.AuthRequest)
 	err := json.NewDecoder(r.Body).Decode(req_body)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		ValidationErrorResponse(w, err.Error())
 		return
 	}
 
 	data, err := ctrl.auth.Auth(req_body.Username, req_body.Password)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		BadRequest(w, "auth failed")
 	} else {
 		JsonSuccess(w, data)

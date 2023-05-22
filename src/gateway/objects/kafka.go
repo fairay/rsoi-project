@@ -14,3 +14,7 @@ type RequestStat struct {
 	Duration     time.Duration `json:"duration"`
 	UserName     string        `json:"userName,omitempty"`
 }
+
+type FetchResponse struct {
+	Reqests []RequestStat `json:"requests"`
+}

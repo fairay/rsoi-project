@@ -8,6 +8,7 @@ import (
 )
 
 type PrivilegesRep interface {
+	Create(*objects.Privilege) error
 	Find(username string) (*objects.Privilege, error)
 	Update(*objects.Privilege) error
 }
@@ -18,6 +19,10 @@ type PGPrivilegesRep struct {
 
 func NewPGPrivilegesRep(db *gorm.DB) *PGPrivilegesRep {
 	return &PGPrivilegesRep{db}
+}
+
+func (rep *PGPrivilegesRep) Create(privilege *objects.Privilege) error {
+	return rep.db.Create(privilege).Error
 }
 
 func (rep *PGPrivilegesRep) Find(username string) (*objects.Privilege, error) {

@@ -32,6 +32,12 @@ func Forbidden(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusForbidden)
 }
 
+func ForbiddenMsg(w http.ResponseWriter, msg string) {
+	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+	w.WriteHeader(http.StatusForbidden)
+	json.NewEncoder(w).Encode(msg)
+}
+
 func ValidationErrorResponse(w http.ResponseWriter, message string) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusBadRequest)

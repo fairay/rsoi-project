@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"statistics/objects"
@@ -38,8 +39,13 @@ func InitDBConnection(cnf DBConfiguration) *gorm.DB {
 }
 
 func StatWriteLoop(rep repository.StatisticsRep) {
+	ctx := context.Background()
 	for {
 		message := GetMessage()
 		rep.Create(message)
+
+		if err := ctx.Err(); err != nil {
+			log.Panic(err)
+		}
 	}
 }

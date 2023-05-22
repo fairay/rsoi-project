@@ -17,9 +17,27 @@ type privilegesCtrl struct {
 
 func InitPrivileges(r *mux.Router, privileges *models.PrivilegesM) {
 	ctrl := &privilegesCtrl{privileges}
+	r.HandleFunc("/privilege", ctrl.post).Methods("POST")
 	r.HandleFunc("/privilege", ctrl.get).Methods("GET")
 	r.HandleFunc("/history", ctrl.addTicket).Methods("POST")
 	r.HandleFunc("/history/{ticketUid}", ctrl.deleteTicket).Methods("DELETE")
+}
+
+func (ctrl *privilegesCtrl) post(w http.ResponseWriter, r *http.Request) {
+	req_body := new(objects.AddPrivilegeRequest)
+	err := json.NewDecoder(r.Body).Decode(req_body)
+	if err != nil {
+		responses.BadRequest(w, err.Error())
+		return
+	}
+
+	err = ctrl.privileges.Create(req_body)
+	switch err {
+	case nil:
+		responses.SuccessCreation(w, "user's privilege entry created")
+	default:
+		responses.BadRequest(w, err.Error())
+	}
 }
 
 func (ctrl *privilegesCtrl) get(w http.ResponseWriter, r *http.Request) {

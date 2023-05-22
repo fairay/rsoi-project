@@ -12,18 +12,24 @@ import (
 
 func initControllers(r *mux.Router, models *models.Models) {
 	r.Use(utils.LogHandler)
-	r.Use(func(next http.Handler) http.Handler {
-		return utils.RequestStatMiddleware(next, models.Kafka.Topic, models.Kafka.Producer)
-	})
 	api1_r := r.PathPrefix("/api/v1/").Subrouter()
 
-	InitAuth(api1_r, models.Client)
+	api1_r_noauth := api1_r.NewRoute().Subrouter()
+	api1_r_noauth.Use(func(next http.Handler) http.Handler {
+		return utils.RequestStatMiddleware(next, models.Kafka.Topic, models.Kafka.Producer)
+	})
+	InitAuth(api1_r_noauth, models.Client, models.Privileges)
+
 	api1_r_auth := api1_r.NewRoute().Subrouter()
 	api1_r_auth.Use(JwtAuthentication)
+	api1_r_auth.Use(func(next http.Handler) http.Handler {
+		return utils.RequestStatMiddleware(next, models.Kafka.Topic, models.Kafka.Producer)
+	})
 
 	InitFlights(api1_r_auth, models.Flights)
 	InitPrivileges(api1_r_auth, models.Privileges)
 	InitTickets(api1_r_auth, models.Tickets)
+	InitStatistics(api1_r_auth, models.Statistics)
 }
 
 func InitRouter() *mux.Router {

@@ -22,6 +22,11 @@ type PrivilegeInfoResponse struct {
 	History []BalanceHistory `json:"history"`
 }
 
+type AddPrivilegeRequest struct {
+	User   string `json:"user"`
+	Status string `json:"Status"`
+}
+
 type AddHistoryRequest struct {
 	TicketUID       string `json:"ticketUID"`
 	Price           int    `json:"price"`

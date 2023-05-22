@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"privileges/controllers"
 	"privileges/objects"
 	"privileges/utils"
@@ -31,8 +32,8 @@ func initDBConnection(cnf utils.DBConfiguration) *gorm.DB {
 
 	privilege := &objects.Privilege{
 		Id:       1,
-		Username: "TestMax@none.com",
-		Status:   "BRONZE",
+		Username: "admin@example.com",
+		Status:   "GOLD",
 		Balance:  0,
 	}
 	db.FirstOrCreate(privilege)
@@ -52,7 +53,7 @@ func main() {
 	r := controllers.InitRouter(db)
 
 	utils.Logger.Print("Server started")
-	fmt.Printf("Server is running on http://localhost:%d\n", utils.Config.Port)
+	log.Printf("Server is running on http://localhost:%d\n", utils.Config.Port)
 	code := controllers.RunRouter(r, utils.Config.Port)
 
 	utils.Logger.Printf("Server ended with code %s", code)

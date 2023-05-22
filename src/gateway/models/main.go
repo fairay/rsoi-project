@@ -19,6 +19,7 @@ type Models struct {
 	Flights    *FlightsM
 	Privileges *PrivilegesM
 	Tickets    *TicketsM
+	Statistics *StatisticsM
 
 	Kafka *KafkaSettings
 }
@@ -32,7 +33,7 @@ func InitKafka() *KafkaSettings {
 	config.Producer.Return.Successes = true
 	producer, err := sarama.NewSyncProducer(kafkaBrokers, config)
 	if err != nil {
-		log.Fatalf("Error creating Kafka producer: %v", err)
+		log.Printf("Error creating Kafka producer: %v", err)
 	}
 
 	return &KafkaSettings{
@@ -49,6 +50,7 @@ func InitModels() *Models {
 	models.Flights = NewFlightsM(client)
 	models.Privileges = NewPrivilegesM(client)
 	models.Tickets = NewTicketsM(client, models.Flights)
+	models.Statistics = NewStatisticsM(client)
 	models.Kafka = InitKafka()
 
 	return models

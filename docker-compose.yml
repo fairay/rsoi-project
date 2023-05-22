@@ -127,6 +127,7 @@ services:
       - flights-service
       - privileges-service
       - tickets-service
+    restart: on-failure
 
 volumes:
   db-data:

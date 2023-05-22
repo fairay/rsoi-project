@@ -1,11 +1,11 @@
 package main
 
 import (
+	"log"
 	"statistics/controllers"
 	"statistics/repository"
 	"statistics/utils"
 
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -27,9 +27,9 @@ func main() {
 	defer db.Close()
 	go utils.StatWriteLoop(repository.NewPGStatisticsRep(db))
 
-	r := controllers.InitRouter()
+	r := controllers.InitRouter(db)
 	utils.Logger.Print("Server started")
-	fmt.Printf("Server is running on http://localhost:%d\n", utils.Config.Port)
+	log.Printf("Server is running on http://localhost:%d\n", utils.Config.Port)
 	code := controllers.RunRouter(r, utils.Config.Port)
 
 	utils.Logger.Printf("Server ended with code %s", code)

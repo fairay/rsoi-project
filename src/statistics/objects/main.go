@@ -19,3 +19,7 @@ type RequestStat struct {
 func (RequestStat) TableName() string {
 	return "statistics"
 }
+
+type FetchResponse struct {
+	Reqests []RequestStat `json:"requests"`
+}

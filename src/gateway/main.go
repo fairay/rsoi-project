@@ -3,8 +3,8 @@ package main
 import (
 	"gateway/controllers"
 	"gateway/utils"
+	"log"
 
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -20,7 +20,7 @@ func main() {
 
 	r := controllers.InitRouter()
 	utils.Logger.Print("Server started")
-	fmt.Printf("Server is running on http://localhost:%d\n", utils.Config.Port)
+	log.Printf("Server is running on http://localhost:%d\n", utils.Config.Port)
 	code := controllers.RunRouter(r, utils.Config.Port)
 
 	utils.Logger.Printf("Server ended with code %s", code)

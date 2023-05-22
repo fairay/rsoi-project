@@ -16,6 +16,15 @@ func NewPrivilegesM(rep repository.PrivilegesRep, history *HistoryM) *Privileges
 	return &PrivilegesM{rep, history, 0.1}
 }
 
+func (model *PrivilegesM) Create(privilegeReq *objects.AddPrivilegeRequest) error {
+	privilege := &objects.Privilege{
+		Username: privilegeReq.User,
+		Status:   privilegeReq.Status,
+		Balance:  0,
+	}
+	return model.rep.Create(privilege)
+}
+
 func (model *PrivilegesM) Find(username string) (*objects.Privilege, []objects.PrivilegeHistory, error) {
 	privilege, err := model.rep.Find(username)
 	if err != nil {

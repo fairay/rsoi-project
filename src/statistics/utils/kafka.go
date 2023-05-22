@@ -59,7 +59,7 @@ func InitKafka() *KafkaSettings {
 	config.Producer.Return.Successes = true
 	consumer, err := sarama.NewConsumerGroup(kafkaBrokers, "1", config)
 	if err != nil {
-		log.Fatalf("Error creating Kafka consumer: %v", err)
+		log.Printf("Error creating Kafka consumer: %v", err)
 	}
 
 	return &KafkaSettings{
@@ -77,9 +77,8 @@ func (kafka *KafkaSettings) ConsumeLoop() {
 			panic(err)
 		}
 
-		if ctx.Err() != nil {
-			log.Println(ctx.Err().Error())
-			panic(err)
+		if err = ctx.Err(); err != nil {
+			log.Panic(err)
 		}
 	}
 }

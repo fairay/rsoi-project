@@ -1,16 +1,19 @@
 package controllers
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"strings"
+	"time"
+
 	"gateway/controllers/responses"
+	"gateway/models"
 	"gateway/objects"
 	"gateway/utils"
-	"io/ioutil"
-	"strings"
-
-	"net/http"
-	"time"
 
 	"github.com/MicahParks/keyfunc"
 	"github.com/golang-jwt/jwt/v4"
@@ -19,6 +22,7 @@ import (
 
 type Token struct {
 	jwt.StandardClaims
+	Role string `json:"role,omitempty"`
 }
 
 func newJWKs(rawJWKS string) *keyfunc.JWKS {
@@ -30,11 +34,11 @@ func newJWKs(rawJWKS string) *keyfunc.JWKS {
 	return jwks
 }
 
-func RetrieveToken(w http.ResponseWriter, r *http.Request) *Token {
+func RetrieveToken(w http.ResponseWriter, r *http.Request) (*Token, error) {
 	reqToken := r.Header.Get("Authorization")
 	if len(reqToken) == 0 {
 		responses.TokenIsMissing(w)
-		return nil
+		return nil, fmt.Errorf("TokenIsMissing")
 	}
 	splitToken := strings.Split(reqToken, "Bearer ")
 	tokenStr := splitToken[1]
@@ -44,60 +48,118 @@ func RetrieveToken(w http.ResponseWriter, r *http.Request) *Token {
 	token, err := jwt.ParseWithClaims(tokenStr, tk, jwks.Keyfunc)
 	if err != nil || !token.Valid {
 		responses.JwtAccessDenied(w)
-		return nil
+		return nil, fmt.Errorf("JwtAccessDenied")
 	}
 	if time.Now().Unix()-tk.ExpiresAt > 0 {
 		responses.TokenExpired(w)
-		return nil
+		return nil, fmt.Errorf("TokenExpired")
 	}
 
-	return tk
+	return tk, nil
 }
 
 var JwtAuthentication = func(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if token := RetrieveToken(w, r); token != nil {
-			r.Header.Set("X-User-Name", token.Subject)
-			next.ServeHTTP(w, r)
+		token, err := RetrieveToken(w, r)
+		if err != nil {
+			log.Printf("Token error: %s", err.Error())
+			return
 		}
+
+		r.Header.Set("X-User-Name", token.Subject)
+		r.Header.Set("X-User-Role", token.Role)
+		next.ServeHTTP(w, r)
 	})
 }
 
 type authCtrl struct {
-	client *http.Client
+	client     *http.Client
+	privileges *models.PrivilegesM
 }
 
-func InitAuth(r *mux.Router, client *http.Client) {
-	ctrl := &authCtrl{client}
+func InitAuth(r *mux.Router, client *http.Client, privileges *models.PrivilegesM) {
+	ctrl := &authCtrl{client, privileges}
 	r.HandleFunc("/register", ctrl.register).Methods("POST")
 	r.HandleFunc("/authorize", ctrl.authorize).Methods("POST")
 }
 
 func (ctrl *authCtrl) register(w http.ResponseWriter, r *http.Request) {
-	req, _ := http.NewRequest(
-		"POST",
-		fmt.Sprintf("%s/api/v1/register", utils.Config.IdentityProviderEndpoint),
-		r.Body,
-	)
-	req.Header.Add("Authorization", r.Header.Get("Authorization"))
-
-	resp, err := ctrl.client.Do(req)
+	token, err := RetrieveToken(w, r)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Printf("failed to RetrieveToken: %s", err.Error())
+		return
+	}
+
+	if token.Role != "admin" {
+		responses.ForbiddenMsg(w, fmt.Sprintf("not allowed for %s role", token.Role))
+		return
+	}
+
+	req_body := new(objects.UserCreateRequest)
+	err = json.NewDecoder(r.Body).Decode(req_body)
+	if err != nil {
+		log.Printf("failed to parse body: %s", err.Error())
+		if e, ok := err.(*json.SyntaxError); ok {
+			log.Printf("syntax error at byte offset %d", e.Offset)
+		}
+		log.Printf("sakura response: %q", r.Body)
+
+		responses.ValidationErrorResponse(w, err.Error())
+		return
+	}
+
+	req, shouldReturn := ctrl.makeRegisterReq(req_body, w, r)
+	if shouldReturn {
+		return
+	}
+
+	register_resp, err := ctrl.client.Do(req)
+	if err != nil {
+		log.Println(err.Error())
 		responses.InternalError(w)
 		return
 	}
 
-	defer resp.Body.Close()
-	responses.ForwardResponse(w, resp)
+	defer register_resp.Body.Close()
+	if register_resp.StatusCode != http.StatusOK {
+		responses.ForwardResponse(w, register_resp)
+	}
+
+	err = ctrl.privileges.NewPrivilege(
+		req_body.Profile.Email,
+		r.Header.Get("Authorization"),
+	)
+	if err != nil {
+		log.Println(err.Error())
+		responses.InternalError(w)
+		return
+	}
+
+	responses.ForwardResponse(w, register_resp)
+}
+
+func (*authCtrl) makeRegisterReq(req_body *objects.UserCreateRequest, w http.ResponseWriter, r *http.Request) (*http.Request, bool) {
+	register_body, err := json.Marshal(req_body)
+	if err != nil {
+		log.Printf("failed to marshal register request: %s", err.Error())
+		responses.ValidationErrorResponse(w, err.Error())
+		return nil, true
+	}
+	req, _ := http.NewRequest(
+		http.MethodPost,
+		fmt.Sprintf("%s/api/v1/register", utils.Config.Endpoints.IdentityProvider),
+		bytes.NewBuffer(register_body),
+	)
+	req.Header.Add("Authorization", r.Header.Get("Authorization"))
+	return req, false
 }
 
 func (ctrl *authCtrl) authorize(w http.ResponseWriter, r *http.Request) {
-	req, _ := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/authorize", utils.Config.IdentityProviderEndpoint), r.Body)
+	req, _ := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/authorize", utils.Config.Endpoints.IdentityProvider), r.Body)
 
 	resp, err := ctrl.client.Do(req)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		responses.InternalError(w)
 		return
 	}

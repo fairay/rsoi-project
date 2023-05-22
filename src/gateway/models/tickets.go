@@ -43,7 +43,7 @@ func (model *TicketsM) FetchUser(authHeader string) (*objects.UserInfoResponse, 
 }
 
 func (model *TicketsM) fetch(authHeader string) (objects.TicketArr, error) {
-	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/tickets", utils.Config.TicketsEndpoint), nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/tickets", utils.Config.Endpoints.Tickets), nil)
 	req.Header.Set("Authorization", authHeader)
 	resp, err := model.client.Do(req)
 	if err != nil {
@@ -72,7 +72,7 @@ func (model *TicketsM) Fetch(authHeader string) ([]objects.TicketResponse, error
 
 func (model *TicketsM) create(flight_number string, price int, authHeader string) (*objects.TicketCreateResponse, error) {
 	req_body, _ := json.Marshal(&objects.TicketCreateRequest{FlightNumber: flight_number, Price: price})
-	req, _ := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/tickets", utils.Config.TicketsEndpoint), bytes.NewBuffer(req_body))
+	req, _ := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/tickets", utils.Config.Endpoints.Tickets), bytes.NewBuffer(req_body))
 	req.Header.Add("Authorization", authHeader)
 
 	if resp, err := model.client.Do(req); err != nil {
@@ -112,7 +112,7 @@ func (model *TicketsM) Create(flight_number string, authHeader string, price int
 }
 
 func (model *TicketsM) find(ticket_uid string, authHeader string) (*objects.Ticket, error) {
-	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/tickets/%s", utils.Config.TicketsEndpoint, ticket_uid), nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/tickets/%s", utils.Config.Endpoints.Tickets, ticket_uid), nil)
 	req.Header.Add("Authorization", authHeader)
 	resp, err := model.client.Do(req)
 	if err != nil {
@@ -142,7 +142,7 @@ func (model *TicketsM) Find(ticket_uid string, username string, authHeader strin
 }
 
 func (model *TicketsM) delete(ticket_uid string, authHeader string) error {
-	req, _ := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/tickets/%s", utils.Config.TicketsEndpoint, ticket_uid), nil)
+	req, _ := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/tickets/%s", utils.Config.Endpoints.Tickets, ticket_uid), nil)
 	req.Header.Add("Authorization", authHeader)
 	_, err := model.client.Do(req)
 	return err

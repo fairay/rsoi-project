@@ -20,7 +20,7 @@ func NewFlightsM(client *http.Client) *FlightsM {
 }
 
 func (model *FlightsM) Fetch(page int, page_size int, authHeader string) *objects.PaginationResponse {
-	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/flights", utils.Config.FlightsEndpoint), nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/flights", utils.Config.Endpoints.Flights), nil)
 	q := req.URL.Query()
 	q.Add("page", fmt.Sprintf("%d", page))
 	q.Add("size", fmt.Sprintf("%d", page_size))
@@ -43,7 +43,7 @@ func (model *FlightsM) Fetch(page int, page_size int, authHeader string) *object
 }
 
 func (model *FlightsM) Find(flight_number string, authHeader string) (*objects.FlightResponse, error) {
-	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/flights/%s", utils.Config.FlightsEndpoint, flight_number), nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/flights/%s", utils.Config.Endpoints.Flights, flight_number), nil)
 	req.Header.Add("Authorization", authHeader)
 	resp, err := model.client.Do(req)
 	if err != nil {

@@ -4,6 +4,7 @@ import (
 	"flights/controllers"
 	"flights/objects"
 	"flights/utils"
+	"log"
 
 	"fmt"
 	"math/rand"
@@ -55,7 +56,7 @@ func main() {
 	r := controllers.InitRouter(db)
 
 	utils.Logger.Print("Server started")
-	fmt.Printf("Server is running on http://localhost:%d\n", utils.Config.Port)
+	log.Printf("Server is running on http://localhost:%d\n", utils.Config.Port)
 	code := controllers.RunRouter(r, utils.Config.Port)
 
 	utils.Logger.Printf("Server ended with code %s", code)
