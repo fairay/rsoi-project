@@ -7,7 +7,6 @@ import { CookieSetOptions } from "universal-cookie";
 
 import { Account } from "types/Account";
 import { Create as CreateQuery } from "postAPI/accounts/Create";
-import { Login as LoginQuery } from "postAPI/accounts/Login";
 
 import Input from "components/Input";
 import RoundButton from "components/RoundButton";
@@ -60,7 +59,6 @@ class SignUpPage extends React.Component<SignUpProps> {
         e.currentTarget.disabled = true
         var data = await CreateQuery(this.acc)
         if (data.status === 200) {
-            await LoginQuery(this.acc, this.props.setCookie)
             window.location.href = '/';
         } else {
             e.currentTarget.disabled = false

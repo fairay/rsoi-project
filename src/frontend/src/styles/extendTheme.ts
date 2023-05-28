@@ -7,7 +7,7 @@ const theme = extendTheme({
     secondary: "#eee5cf",
     third: "#ddbc6d",
 
-    "bg": "#EAE7E0",
+    "bg": "#F6F1F1",
     "bg-alt": "#D4CDC4",
     "text": "#000000",
     "title": "#9b4e23",

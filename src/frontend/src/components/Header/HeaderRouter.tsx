@@ -19,7 +19,7 @@ export const HeaderRouter: React.FC<{}> = () => {
             <Route path="/accounts/:login/recipes" element={<UserHeader subtitle="Автор" title="" />}/>
             <Route path="/accounts/:login/likes" element={<UserHeader subtitle="Понравилось" title="" />}/>
 
-            <Route path="/auth/signin" element={<Header title="Вход" undertitle="Добро пожаловать. Снова." />}/>
+            <Route path="/auth/signin" element={<Header title="Вход"/>}/>
             <Route path="/auth/signup" element={<Header title="Регистрация" undertitle="Чтобы получить доступ к тысячам новых возможностей в Вашем кулинарном самовыражении!" />}/>
             
             <Route path="/recipes/:id" element={<RecipeHeader title=""/>}/>
