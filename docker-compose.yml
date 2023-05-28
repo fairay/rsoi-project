@@ -129,5 +129,14 @@ services:
       - tickets-service
     restart: on-failure
 
+  # frontend-service:
+  #   build:
+  #     context: src/frontend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - gateway-service
+  #   restart: on-failure
+
 volumes:
   db-data:

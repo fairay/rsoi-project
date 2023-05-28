@@ -41,7 +41,20 @@ func InitRouter() *mux.Router {
 }
 
 func RunRouter(r *mux.Router, port uint16) error {
-	c := cors.New(cors.Options{})
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000", "http://frontend-service:3000"},
+		AllowCredentials: true,
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+			http.MethodHead,
+		},
+		AllowedHeaders: []string{"*"},
+	})
 	handler := c.Handler(r)
 	return http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", port), handler)
 }
