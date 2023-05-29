@@ -12,17 +12,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type filghtCtrl struct {
+type flightCtrl struct {
 	model *models.FlightsM
 }
 
 func InitFlights(r *mux.Router, model *models.FlightsM) {
-	ctrl := &filghtCtrl{model}
+	ctrl := &flightCtrl{model}
 	r.HandleFunc("/flights", ctrl.getAll).Methods("GET")
 	r.HandleFunc("/flights/{flightNumber}", ctrl.get).Methods("GET")
 }
 
-func (ctrl *filghtCtrl) getAll(w http.ResponseWriter, r *http.Request) {
+func (ctrl *flightCtrl) getAll(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	page, _ := strconv.Atoi(queryParams.Get("page"))
 	page_size, _ := strconv.Atoi(queryParams.Get("size"))
@@ -38,7 +38,7 @@ func (ctrl *filghtCtrl) getAll(w http.ResponseWriter, r *http.Request) {
 	responses.JsonSuccess(w, data)
 }
 
-func (ctrl *filghtCtrl) get(w http.ResponseWriter, r *http.Request) {
+func (ctrl *flightCtrl) get(w http.ResponseWriter, r *http.Request) {
 	urlParams := mux.Vars(r)
 	flight_number := urlParams["flightNumber"]
 

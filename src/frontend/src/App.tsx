@@ -15,15 +15,16 @@ import CategoryPage from "pages/Category";
 import SearchContextProvider from "context/Search";
 import { HeaderRouter } from "components/Header";
 import AllFlightsPage from "pages/Recipe/AllFlights/AllFlightsPage";
+import FlightInfoPage from "pages/Recipe/FlightInfo";
 
 
-interface HomeProps {}
+interface HomeProps { }
 const Home: React.FC<HomeProps> = () => {
   return (
     <Box backgroundColor="bg" h="auto">
       <Container maxW="1000px" minH="95%"
-        display="flex" 
-        paddingX="0px" paddingY="30px"  
+        display="flex"
+        paddingX="0px" paddingY="30px"
         alignSelf="center" justifyContent="center"
         textStyle="body"
       >
@@ -36,37 +37,37 @@ const Home: React.FC<HomeProps> = () => {
 function Routing() {
   return <BrowserRouter>
     <Routes>
-      <Route path="/" element={<AllFlightsPage/>}/>
-      <Route path="/me/likes" element={<LikedRecipesPage/>}/>
-      <Route path="/me/recipes" element={<AuthorRecipesPage/>}/>
+      <Route path="/" element={<AllFlightsPage />} />
+      <Route path="/me/likes" element={<LikedRecipesPage />} />
+      <Route path="/me/recipes" element={<AuthorRecipesPage />} />
 
-      <Route path="/accounts/:login/recipes" element={<AuthorRecipesPage/>}/>
-      <Route path="/accounts/:login/likes" element={<LikedRecipesPage/>}/>
+      <Route path="/accounts/:login/recipes" element={<AuthorRecipesPage />} />
+      <Route path="/accounts/:login/likes" element={<LikedRecipesPage />} />
 
-      <Route path="/auth/signin" element={<Login/>}/>
-      <Route path="/auth/signup" element={<SignUp/>}/>
+      <Route path="/auth/signin" element={<Login />} />
+      <Route path="/auth/signup" element={<SignUp />} />
 
-      <Route path="/recipes/:id" element={<RecipeInfoPage />}/>
+      <Route path="/flights/:flightNumber" element={<FlightInfoPage />} />
 
-      <Route path="/categories/:title" element={<CategoryPage />}/>
-      <Route path="/users" element={<UsersPage />}/>
+      <Route path="/categories/:title" element={<CategoryPage />} />
+      <Route path="/users" element={<UsersPage />} />
 
-      <Route path="*" element={<NotFound />}/>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>
 }
 
-function NotFound () {
+function NotFound() {
   return <h1>Page not Found</h1>
 }
 
 export const App = () => {
-  return (    
+  return (
     <ChakraProvider theme={theme}>
-    <SearchContextProvider>
-      <HeaderRouter/>
-      <Home />
-    </SearchContextProvider>
+      <SearchContextProvider>
+        <HeaderRouter />
+        <Home />
+      </SearchContextProvider>
     </ChakraProvider>
   )
 };

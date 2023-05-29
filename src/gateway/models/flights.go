@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"gateway/errors"
 	"gateway/objects"
 	"gateway/utils"
 	"io/ioutil"
@@ -48,6 +49,8 @@ func (model *FlightsM) Find(flight_number string, authHeader string) (*objects.F
 	resp, err := model.client.Do(req)
 	if err != nil {
 		return nil, err
+	} else if resp.StatusCode == http.StatusNotFound {
+		return nil, errors.FlightNotFound
 	} else {
 		data := &objects.FlightResponse{}
 		body, _ := ioutil.ReadAll(resp.Body)

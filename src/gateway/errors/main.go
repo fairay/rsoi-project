@@ -5,5 +5,6 @@ import (
 )
 
 var (
+	FlightNotFound  = errors.New("Flight is not found")
 	ForbiddenTicket = errors.New("Forbidden ticket for this user")
 )

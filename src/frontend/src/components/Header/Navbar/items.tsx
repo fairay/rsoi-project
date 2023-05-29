@@ -1,13 +1,13 @@
 export const navItems = {
     '': [
-        { name: "Рецепты", ref: "/" },
+        { name: "Рейсы", ref: "/" },
     ],
     'admin': [
-        { name: "Рецепты", ref: "/" },
+        { name: "Рейсы", ref: "/" },
         { name: "Пользователи", ref: "/users" },
     ],
     'user': [
-        { name: "Рецепты", ref: "/" },
+        { name: "Рейсы", ref: "/" },
         { name: "Пользователи", ref: "/users" },
     ],
 }

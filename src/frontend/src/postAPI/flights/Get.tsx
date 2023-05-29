@@ -1,18 +1,18 @@
-import axios from "axios";
-import { Recipe } from "types/Recipe";
-import { backUrl } from "..";
+import axiosBackend from "..";
+import { Flight } from "types/Flight";
 
 interface resp {
     status: number
-    content: Recipe
+    content: Flight
 }
 
-const GetRecipe = async function(id: number): Promise<resp> {
-    const response = await axios.get(backUrl + `/recipes/${id}`);
+const GetFlight = async function(flightNumber: string): Promise<resp> {
+    const response = await axiosBackend
+        .get(`/flights/${flightNumber}`);
     return {
         status: response.status,
-        content: response.data as Recipe
+        content: response.data as Flight
     };
 }
 
-export default GetRecipe
+export default GetFlight

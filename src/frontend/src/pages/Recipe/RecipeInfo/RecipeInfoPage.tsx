@@ -2,7 +2,6 @@ import React from "react";
 import { NavigateFunction, Params } from "react-router-dom";
 import { Box, Button, HStack, Image, Text, VStack } from "@chakra-ui/react";
 
-import GetRecipe from "postAPI/flights/Get"
 import GetIngredient from "postAPI/ingredients/Get";
 import GetSteps from "postAPI/steps/Get";
 import PushStep from "postAPI/steps/Push";
@@ -150,20 +149,20 @@ class RecipeInfoPage extends React.Component<RecipeInfoParams, State> {
     }
 
     componentDidMount() {
-        GetRecipe(this.id).then(data => {
-            if (data.status === 200) {
-                this.setState({recipe: data.content})
-                this.setState({isAuthor: this.state.recipe?.author === this.props.cookie.login})
+        // GetFlight(this.id).then(data => {
+        //     if (data.status === 200) {
+        //         this.setState({recipe: data.content})
+        //         this.setState({isAuthor: this.state.recipe?.author === this.props.cookie.login})
 
-                var elem = document.getElementById("title")
-                if (elem && this.state.recipe)
-                    elem.innerText = this.state.recipe.title
+        //         var elem = document.getElementById("title")
+        //         if (elem && this.state.recipe)
+        //             elem.innerText = this.state.recipe.title
 
-                elem = document.getElementById("author")
-                if (elem && this.state.recipe)
-                    elem.innerText = this.state.recipe.author
-            }
-        });
+        //         elem = document.getElementById("author")
+        //         if (elem && this.state.recipe)
+        //             elem.innerText = this.state.recipe.author
+        //     }
+        // });
 
         GetIngredient(this.id).then(data => {
             if (data.status === 200) {

@@ -13,8 +13,18 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-type Token struct {
+type Claims struct {
 	jwt.StandardClaims
+	Role string `json:"role,omitempty"`
+}
+
+const issuedAtLeewaySecs = 5
+
+func (c *Claims) Valid() error {
+    c.StandardClaims.IssuedAt -= issuedAtLeewaySecs
+    valid := c.StandardClaims.Valid()
+    c.StandardClaims.IssuedAt += issuedAtLeewaySecs
+    return valid
 }
 
 func newJWKs(rawJWKS string) *keyfunc.JWKS {
@@ -26,7 +36,7 @@ func newJWKs(rawJWKS string) *keyfunc.JWKS {
 	return jwks
 }
 
-func RetrieveToken(w http.ResponseWriter, r *http.Request) *Token {
+func RetrieveToken(w http.ResponseWriter, r *http.Request) *Claims {
 	reqToken := r.Header.Get("Authorization")
 	if len(reqToken) == 0 {
 		responses.TokenIsMissing(w)
@@ -35,7 +45,7 @@ func RetrieveToken(w http.ResponseWriter, r *http.Request) *Token {
 	splitToken := strings.Split(reqToken, "Bearer ")
 	tokenStr := splitToken[1]
 	jwks := newJWKs(utils.Config.RawJWKS)
-	tk := &Token{}
+	tk := &Claims{}
 
 	token, err := jwt.ParseWithClaims(tokenStr, tk, jwks.Keyfunc)
 	if err != nil || !token.Valid {

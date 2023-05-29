@@ -9,9 +9,7 @@ RUN go mod download
 
 COPY . .
 
-RUN mkdir -p logs
-RUN mkdir -p temp
-
+RUN mkdir -p logs temp
 RUN go build -o ./app
 
 EXPOSE 8070
