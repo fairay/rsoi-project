@@ -2,7 +2,7 @@ import React from "react";
 import { NavigateFunction, Params } from "react-router-dom";
 import { Box, Button, HStack, Image, Text, VStack } from "@chakra-ui/react";
 
-import GetRecipe from "postAPI/recipes/Get"
+import GetRecipe from "postAPI/flights/Get"
 import GetIngredient from "postAPI/ingredients/Get";
 import GetSteps from "postAPI/steps/Get";
 import PushStep from "postAPI/steps/Push";
@@ -13,7 +13,7 @@ import GetIsLiked from "postAPI/likes/GetLiked";
 import DeleteIngredient from "postAPI/ingredients/Delete";
 import DeleteStep from "postAPI/steps/Delete";
 import PutIngredient from "postAPI/ingredients/Post";
-import DeleteRecipe from "postAPI/recipes/Delete";
+import DeleteRecipe from "postAPI/flights/Delete";
 
 import {Recipe as RecipeT} from "types/Recipe"
 import {Ingredient as IngredientT} from "types/Ingredient";

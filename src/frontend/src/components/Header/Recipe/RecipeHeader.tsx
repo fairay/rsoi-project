@@ -3,7 +3,7 @@ import Header from "components/Header";
 import { TitlesProps } from "components/Header/Titles/Titles";
 import { useParams } from "react-router-dom";
 import AuthorBox from "components/Boxes/Author";
-import GetRecipe from "postAPI/recipes/Get";
+import GetRecipe from "postAPI/flights/Get";
 
 
 const RecipeHeader: React.FC<TitlesProps> = (props) => {

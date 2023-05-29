@@ -1,5 +1,5 @@
 import { Category } from "types/Categories";
-import { Recipe } from "types/Recipe";
+import { Flight } from "types/Flight";
 import { Account } from "types/Account";
 import axios from "axios";
 
@@ -16,6 +16,7 @@ const axiosBackend = () => {
         if (config.headers && token) {
             config.headers.Authorization = 'Bearer ' + token;
         }
+        console.log("role: ", localStorage.getItem("role"));
 
         return config;
     });
@@ -25,10 +26,11 @@ const axiosBackend = () => {
 
 export default axiosBackend();
 
-
-export type AllRecipeResp = {
-    status: number,
-    content: Recipe[] | string
+export type AllFilghtsResp = {
+    page: number,
+    pageSize: number, 
+    totalElements: number,
+    items: Flight[]
 }
 
 export type AllCategoriesResp = {

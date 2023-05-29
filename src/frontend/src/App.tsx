@@ -7,7 +7,6 @@ import { BrowserRouter } from "react-router-dom";
 import Login from "pages/Login";
 import SignUp from "pages/Signup";
 import RecipeInfoPage from "pages/Recipe/RecipeInfo";
-import AllRecipesPage from "pages/Recipe/AllRecipes";
 import UsersPage from "pages/Users/UsersPage";
 import AuthorRecipesPage from "pages/Recipe/AuthorRecipes";
 import LikedRecipesPage from "pages/Recipe/LikedRecipes";
@@ -15,6 +14,7 @@ import CategoryPage from "pages/Category";
 
 import SearchContextProvider from "context/Search";
 import { HeaderRouter } from "components/Header";
+import AllFlightsPage from "pages/Recipe/AllFlights/AllFlightsPage";
 
 
 interface HomeProps {}
@@ -36,7 +36,7 @@ const Home: React.FC<HomeProps> = () => {
 function Routing() {
   return <BrowserRouter>
     <Routes>
-      <Route path="/" element={<AllRecipesPage/>}/>
+      <Route path="/" element={<AllFlightsPage/>}/>
       <Route path="/me/likes" element={<LikedRecipesPage/>}/>
       <Route path="/me/recipes" element={<AuthorRecipesPage/>}/>
 

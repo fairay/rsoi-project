@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Link } from "@chakra-ui/react";
-import { useCookies } from "react-cookie";
 
 import styles from "./Navbar.module.scss";
 
@@ -13,22 +12,22 @@ import NoauthActions from "./NoauthActions";
 
 export interface NavbarProps {}
 const Navbar: React.FC<NavbarProps> = () => {
-    let [cookie, , removeCookie] = useCookies(['role', 'login', 'token']);
-    let role = cookie.role ? cookie.role : ''
+    let login = "";
+    let role = localStorage.getItem("role") || "";
 
     const [items, ] = React.useState(navItems[role]);
     const logout = () => {
         localStorage.clear();
-        LogoutQuery(removeCookie)
+        LogoutQuery();
         window.location.href = '/';
-    }
+    };
 
     return (
     <Box className={styles.navbar}>
         <Box className={styles.navpages}> {items.map(item =>
             <Link key={item.name} href={item.ref}> {item.name} </Link>
         )} </Box>
-        { role !== '' && <AuthActions login={cookie.login} logout={logout} />}
+        { role !== '' && <AuthActions login={login} logout={logout} />}
         { role === '' && <NoauthActions /> }
     </Box>
     )

@@ -32,6 +32,15 @@ type Token struct {
 	Role string `json:"role,omitempty"`
 }
 
+const issuedAtLeewaySecs = 5
+
+func (c *Token) Valid() error {
+    c.StandardClaims.IssuedAt -= issuedAtLeewaySecs
+    valid := c.StandardClaims.Valid()
+    c.StandardClaims.IssuedAt += issuedAtLeewaySecs
+    return valid
+}
+
 func newJWKs(rawJWKS string) *keyfunc.JWKS {
 	jwksJSON := json.RawMessage(rawJWKS)
 	jwks, err := keyfunc.NewJSON(jwksJSON)
@@ -49,13 +58,17 @@ func RetrieveToken(w http.ResponseWriter, r *http.Request) (*Token, error) {
 	}
 	splitToken := strings.Split(reqToken, "Bearer ")
 	tokenStr := splitToken[1]
+	return processToken(tokenStr, w)
+}
+
+func processToken(tokenStr string, w http.ResponseWriter) (*Token, error) {
 	jwks := newJWKs(utils.Config.RawJWKS)
 	tk := &Token{}
 
-	token, err := jwt.ParseWithClaims(tokenStr, tk, jwks.Keyfunc)
-	if err != nil || !token.Valid {
+	_, err := jwt.ParseWithClaims(tokenStr, tk, jwks.Keyfunc)
+	if err != nil {
 		JwtAccessDenied(w)
-		return nil, fmt.Errorf("JwtAccessDenied")
+		return nil, fmt.Errorf("JwtAccessDenied: %s", err.Error())
 	}
 	if time.Now().Unix()-tk.ExpiresAt > 0 {
 		TokenExpired(w)
@@ -107,7 +120,17 @@ func (ctrl *auhtCtrl) authorize(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err.Error())
 		BadRequest(w, "auth failed")
-	} else {
-		JsonSuccess(w, data)
+		return
 	}
+
+	token, err := processToken(data.AccessToken, w)
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+	log.Println(token)
+	data.Role = token.Role
+	log.Println(data)
+
+	JsonSuccess(w, data)
 }
