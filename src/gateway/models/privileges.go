@@ -8,6 +8,7 @@ import (
 	"gateway/objects"
 	"gateway/utils"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -21,6 +22,7 @@ func NewPrivilegesM(client *http.Client) *PrivilegesM {
 
 func (model *PrivilegesM) NewPrivilege(user string, authHeader string) error {
 	req_body := &objects.AddPrivilegeRequest{User: user, Status: "BRONZE"}
+	log.Printf("creating new privilege: %v", req_body)
 	req_raw_body, _ := json.Marshal(req_body)
 	req, _ := http.NewRequest(
 		http.MethodPost,

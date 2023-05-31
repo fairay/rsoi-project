@@ -106,6 +106,7 @@ func (ctrl *authCtrl) register(w http.ResponseWriter, r *http.Request) {
 
 	req_body := new(objects.UserCreateRequest)
 	err = json.NewDecoder(r.Body).Decode(req_body)
+	log.Printf("creating new account: %v", req_body)
 	if err != nil {
 		log.Printf("failed to parse body: %s", err.Error())
 		if e, ok := err.(*json.SyntaxError); ok {

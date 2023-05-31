@@ -6,9 +6,8 @@ import SignUpPage from "./SignupPage";
 
 const SignUp = () => {
     let navigate = useNavigate();
-    let [cookie, setCookie] = useCookies(['token', 'role', 'login']);
     return ( 
-        <SignUpPage navigate={navigate} cookie={cookie} setCookie={setCookie}/>
+        <SignUpPage navigate={navigate}/>
     )
 }
 

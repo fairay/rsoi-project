@@ -14,6 +14,7 @@
     a {
         @include text-body($color:$colorText);
         width: 100%;
+        white-space: nowrap;
     }
 }
 

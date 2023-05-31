@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"log"
 	"privileges/controllers/responses"
 	"privileges/models"
 	"privileges/objects"
@@ -31,6 +32,7 @@ func (ctrl *privilegesCtrl) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println(req_body)
 	err = ctrl.privileges.Create(req_body)
 	switch err {
 	case nil:

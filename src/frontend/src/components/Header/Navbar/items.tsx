@@ -1,9 +1,9 @@
 export const navItems = {
     '': [
-        { name: "Рейсы", ref: "/" },
     ],
     'admin': [
         { name: "Рейсы", ref: "/" },
+        { name: "Новый пользователь", ref: "/auth/signup" },
         { name: "Пользователи", ref: "/users" },
     ],
     'user': [
