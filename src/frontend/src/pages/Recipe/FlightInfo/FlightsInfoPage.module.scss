@@ -1,4 +1,5 @@
 @import "/src/styles/variables.scss";
+@import "/src/components/RoundButton/RoundButton.module.scss";
 
 .main_box {
     @include main-box();
@@ -18,6 +19,13 @@
     height: 50px;
 }
 
+.bonus_div {
+    display: flex;
+    column-gap: 20px;
+}
+
 .buy_button {
-    
+    @include round_button;
+    width: 100%;
+    margin: 20px 0 0 0;
 }
