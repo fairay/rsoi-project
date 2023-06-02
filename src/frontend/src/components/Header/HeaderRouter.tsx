@@ -12,6 +12,8 @@ export const HeaderRouter: React.FC<{}> = () => {
     return <BrowserRouter>
         <Routes>
             <Route path="/" element={<Header title="Все рейсы" />} />
+            <Route path="/tickets" element={<Header title="Личный кабинет" />} />
+
             <Route path="/users" element={<SearchHeader title="Все пользователи" />} />
             <Route path="/me/likes" element={<Header subtitle="Понравилось" title="Мне" />} />
             <Route path="/me/recipes" element={<Header subtitle="Автор" title="Я" />} />

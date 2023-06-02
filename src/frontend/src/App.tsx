@@ -16,6 +16,7 @@ import SearchContextProvider from "context/Search";
 import { HeaderRouter } from "components/Header";
 import AllFlightsPage from "pages/Recipe/AllFlights/AllFlightsPage";
 import FlightInfoPage from "pages/Recipe/FlightInfo";
+import AllTicketsPage from "pages/Ticket/AllTickets";
 
 
 interface HomeProps { }
@@ -48,6 +49,8 @@ function Routing() {
       <Route path="/auth/signup" element={<SignUp />} />
 
       <Route path="/flights/:flightNumber" element={<FlightInfoPage />} />
+
+      <Route path="/tickets" element={<AllTicketsPage />} />
 
       <Route path="/categories/:title" element={<CategoryPage />} />
       <Route path="/users" element={<UsersPage />} />

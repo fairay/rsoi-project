@@ -2,12 +2,12 @@ export const navItems = {
     '': [
     ],
     'admin': [
-        { name: "Рейсы", ref: "/" },
         { name: "Новый пользователь", ref: "/auth/signup" },
-        { name: "Пользователи", ref: "/users" },
+        { name: "Рейсы", ref: "/" },
+        { name: "Личный кабинет", ref: "/tickets" },
     ],
     'user': [
         { name: "Рейсы", ref: "/" },
-        { name: "Пользователи", ref: "/users" },
+        { name: "Личный кабинет", ref: "/tickets" },
     ],
 }

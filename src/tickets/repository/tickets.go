@@ -68,7 +68,8 @@ func (rep *PGTicketsRep) Find(ticket_uid string) (*objects.Ticket, error) {
 
 func (rep *PGTicketsRep) Delete(ticket_uid string) error {
 	return rep.db.
-		Model(&objects.Ticket{TicketUid: ticket_uid}).
+		Model(&objects.Ticket{}).
+		Where("ticket_uid = ?", ticket_uid).
 		Update("status", "CANCELED").
 		Error
 }

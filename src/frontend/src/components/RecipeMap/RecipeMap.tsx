@@ -19,7 +19,6 @@ class RecipeMap extends React.Component<RecipeBoxProps, State> {
 
     async getAll() {
         var data = await this.props.getCall(0, 20)
-        console.log(data)
         if (data)
             this.setState(data)
     }
