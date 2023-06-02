@@ -1,11 +1,10 @@
 import React from "react";
 import theme from "styles/extendTheme";
 
-import { Box, Link } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { NavigateFunction } from "react-router-dom";
-import { CookieSetOptions } from "universal-cookie";
 
-import { Account, NewUserRequest } from "types/Account";
+import { NewUserRequest } from "types/Account";
 import { Create as CreateQuery } from "postAPI/accounts/Create";
 
 import Input from "components/Input";

@@ -40,7 +40,7 @@ const PopularFlights: React.FC<Props> = ({ requestStats }) => {
 
   return (
     <div>
-      <h2>Самые популярные рейсы:</h2>
+      <h2>Самые популярные рейсы</h2>
       <ul>
         {topFlights.map((flight) => (
           <li key={flight.flightNumber}>

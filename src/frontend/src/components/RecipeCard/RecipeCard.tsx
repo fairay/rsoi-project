@@ -1,4 +1,4 @@
-import { Box, HStack, Image, Link, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Link, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 
 import { Flight as FlightI } from "types/Flight";

@@ -3,6 +3,8 @@ import RoundButton from "components/RoundButton";
 import styles from "./StatisticsPage.module.scss";
 import { RequestStat } from "types/Statistics";
 
+const PageSize = 20;
+
 // Функция для форматирования даты и времени в строку
 export const formatDateTime = (dateTime) => {
     const year = dateTime.getFullYear();
@@ -13,28 +15,32 @@ export const formatDateTime = (dateTime) => {
 
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
+
 interface RequestStatsWidgetProps {
     requestStats: RequestStat[];
 }
+
 export const RequestStatsWidget: React.FC<RequestStatsWidgetProps> = ({ requestStats }) => {
     const [startIndex, setStartIndex] = useState(0);
 
     const handleNextPage = () => {
-        setStartIndex(startIndex + 20);
+        setStartIndex(startIndex + PageSize);
     };
 
     const handlePreviousPage = () => {
-        setStartIndex(startIndex - 20);
+        setStartIndex(startIndex - PageSize);
     };
 
     const renderTableRows = () => {
-        const slicedRequestStats = requestStats.slice(startIndex, startIndex + 20);
+        const slicedRequestStats = requestStats.slice(startIndex, startIndex + PageSize);
         return slicedRequestStats.map((stat, index) => (
             <tr key={index} className={styles.table_row}>
                 <td>{stat.path}</td>
                 <td>{stat.responseCode}</td>
                 <td>{stat.method}</td>
-                <td>{stat.startedAt.toLocaleTimeString()} [{(stat.duration / 1000000000).toFixed(3)} s]</td>
+                <td title={stat.startedAt.toDateString()}>
+                    {stat.startedAt.toLocaleTimeString()} [{(stat.duration / 1000000000).toFixed(3)} s]
+                </td>
                 <td>{stat.userName}</td>
             </tr>
         ));
@@ -51,7 +57,8 @@ export const RequestStatsWidget: React.FC<RequestStatsWidgetProps> = ({ requestS
                 <RoundButton onClick={handlePreviousPage} disabled={startIndex === 0}>
                     Назад
                 </RoundButton>
-                <RoundButton onClick={handleNextPage} disabled={startIndex + 20 >= requestStats.length}>
+                <p>{startIndex+1} - {Math.min(startIndex+PageSize, requestStats.length)} (из {requestStats.length})</p>
+                <RoundButton onClick={handleNextPage} disabled={startIndex + PageSize >= requestStats.length}>
                     Дальше
                 </RoundButton>
             </div>

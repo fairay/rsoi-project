@@ -1,7 +1,5 @@
-import { VStack, Text, Box, Switch, HStack } from "@chakra-ui/react"
+import { VStack, Text, Box, HStack } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
-import { useNavigate, useParams } from "react-router-dom";
 import { Ticket } from "types/Ticket";
 import { Privilege } from "types/Privilege";
 import ProfileInfo from "postAPI/tickets/Me";
@@ -44,7 +42,7 @@ const TicketBox = (ticket: Ticket) => {
         let button = e.currentTarget;
         button.disabled = true;
         let resp = await CancelTicket(ticket.ticketUid);
-        if (resp.status == 204) {
+        if (resp.status === 204) {
             ticket.status = "CANCELED"
         }
         button.disabled = false;
@@ -67,13 +65,13 @@ const TicketBox = (ticket: Ticket) => {
                 <Text>{ticket.toAirport}</Text>
             </HStack>
 
-            {ticket.status == "PAID" &&
+            {ticket.status === "PAID" &&
                 <RoundButton className={styles.cancel_button} type="submit" onClick={event => cancel(event)}>
                     Отменить бронирование
                 </RoundButton>
             }
 
-            {ticket.status == "CANCELED" &&
+            {ticket.status === "CANCELED" &&
                 <RoundButton className={styles.canceled_button}>
                     Бронирование отменено
                 </RoundButton>
@@ -90,7 +88,7 @@ const AllTicketsPage = () => {
 
     const getProfileInfo = async () => {
         let response = await ProfileInfo();
-        if (response.status != 200) {
+        if (response.status !== 200) {
             subtitleError("Ошибка получения информации о профиле");
         }
         let profile = response.data;

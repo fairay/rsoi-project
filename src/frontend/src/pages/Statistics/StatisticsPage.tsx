@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Input } from '@chakra-ui/react';
 import ListRequests from "postAPI/statistics";
 import RoundButton from "components/RoundButton";
@@ -25,14 +25,18 @@ const StatisticsPage = () => {
         setEndDate(e.target.value);
     };
 
-    const handleSubmit = async (_) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await loadData();
+    };
+    
+    const loadData = useCallback(async () => {
         console.log('Selected time range:', startDate, '-', endDate);
-
         let resp = await ListRequests(new Date(startDate), new Date(endDate));
         setRequests(resp.requests);
-    };
+    }, [startDate, endDate]);
 
-    useEffect(() => { handleSubmit(null) }, []);
+    useEffect(() => { loadData() }, [loadData]);
 
     return (
         <div className={styles.main_div}>
