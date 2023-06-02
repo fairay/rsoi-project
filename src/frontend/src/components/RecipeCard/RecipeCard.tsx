@@ -19,10 +19,10 @@ const RecipeCard: React.FC<FlightProps> = (props) => {
               <Text>{props.flightNumber}</Text>
             </Box>
             <Box className={styles.title_box}>
-              <Text>{props.fromAirport}</Text>
+              <Text>{props.fromAirport}➤</Text>
             </Box>
             <Box className={styles.title_box}>
-              <Text>{props.toAirport}</Text>
+              <Text>➤{props.toAirport}</Text>
             </Box>
 
             <HStack>

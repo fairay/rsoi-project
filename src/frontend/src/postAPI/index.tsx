@@ -12,11 +12,9 @@ const axiosBackend = () => {
 
     instance.interceptors.request.use(function (config) {
         const token = localStorage.getItem("authToken");
-        console.log("token: ", token);
         if (config.headers && token) {
             config.headers.Authorization = 'Bearer ' + token;
         }
-        console.log("role: ", localStorage.getItem("role"));
 
         return config;
     });

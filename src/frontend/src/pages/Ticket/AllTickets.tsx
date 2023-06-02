@@ -32,7 +32,7 @@ const PrivilegeCard = ({ privilege }) => {
 
     return (
         <div className={`${styles['privilege-card']} ${styles[cardColor]}`}>
-            <h1 className={styles.balance}>{balance}</h1>
+            <h2 className={styles.balance}>{balance}</h2>
             <Text className={styles.notion}>бонусная карта</Text>
             <Text className={`${styles.status} ${styles[cardColor]}`}>{status}</Text>
         </div>
@@ -99,7 +99,7 @@ const AllTicketsPage = () => {
     };
 
     return (
-        <VStack>
+        <VStack style={{width: "100%"}}>
             { privilege && <PrivilegeCard privilege={privilege}/> }
             <Box className={styles.tickets_box}>
                 {tickets.map(item => TicketBox(item))}

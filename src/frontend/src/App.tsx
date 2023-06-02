@@ -17,6 +17,7 @@ import { HeaderRouter } from "components/Header";
 import AllFlightsPage from "pages/Recipe/AllFlights/AllFlightsPage";
 import FlightInfoPage from "pages/Recipe/FlightInfo";
 import AllTicketsPage from "pages/Ticket/AllTickets";
+import StatisticsPage from "pages/Statistics/StatisticsPage";
 
 
 interface HomeProps { }
@@ -39,21 +40,18 @@ function Routing() {
   return <BrowserRouter>
     <Routes>
       <Route path="/" element={<AllFlightsPage />} />
-      <Route path="/me/likes" element={<LikedRecipesPage />} />
-      <Route path="/me/recipes" element={<AuthorRecipesPage />} />
-
-      <Route path="/accounts/:login/recipes" element={<AuthorRecipesPage />} />
-      <Route path="/accounts/:login/likes" element={<LikedRecipesPage />} />
-
       <Route path="/auth/signin" element={<Login />} />
       <Route path="/auth/signup" element={<SignUp />} />
-
       <Route path="/flights/:flightNumber" element={<FlightInfoPage />} />
-
       <Route path="/tickets" element={<AllTicketsPage />} />
+      <Route path="/statistics" element={<StatisticsPage />} />
 
+      {/* <Route path="/me/likes" element={<LikedRecipesPage />} />
+      <Route path="/me/recipes" element={<AuthorRecipesPage />} />
+      <Route path="/accounts/:login/recipes" element={<AuthorRecipesPage />} />
+      <Route path="/accounts/:login/likes" element={<LikedRecipesPage />} />
       <Route path="/categories/:title" element={<CategoryPage />} />
-      <Route path="/users" element={<UsersPage />} />
+      <Route path="/users" element={<UsersPage />} /> */}
 
       <Route path="*" element={<NotFound />} />
     </Routes>
