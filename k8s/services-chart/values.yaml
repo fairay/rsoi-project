@@ -1,3 +1,19 @@
+frontend:
+  service:
+    port: 3000
+    image:
+      name: fairay/rsoi-lab5-frontend
+      version: latest
+    ingress:
+      enabled: true
+      path: /
+      pathType: Prefix
+statistics:
+  service:
+    port: 8030
+    image:
+      name: fairay/rsoi-lab5-statistics
+      version: latest
 identity-provider:
   service:
     port: 8040
@@ -36,5 +52,5 @@ gateway:
       version: latest
     ingress:
       enabled: true
-      path: /
+      path: /api/
       pathType: Prefix

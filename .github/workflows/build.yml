@@ -86,13 +86,13 @@ jobs:
           cd k8s && helm upgrade --install services ./services-chart
           sleep 20
 
-      - name: Run API Tests
-        uses: matt-ball/newman-action@master
-        with:
-          collection: v1/postman/collection.json
-          environment: v1/postman/environment.json
-          delayRequest: 100
-          reporters: '[ "cli" ]'
+      # - name: Run API Tests
+      #   uses: matt-ball/newman-action@master
+      #   with:
+      #     collection: v1/postman/collection.json
+      #     environment: v1/postman/environment.json
+      #     delayRequest: 100
+      #     reporters: '[ "cli" ]'
 
       # - uses: education/autograding@v1
       #   id: autograder

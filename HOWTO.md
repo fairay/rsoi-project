@@ -4,7 +4,7 @@
 
 **DOCKERHUB_PASSWORD** - пароль для входа в https://hub.docker.com/
 
-**K8S_HOST** - External endpoing из
+**K8S_HOST** - External endpoint из
 ``` bash
 yc managed-kubernetes cluster list
 ```
